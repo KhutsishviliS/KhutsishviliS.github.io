@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR Cube Viewer</title>
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar.js"></script>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        #info, #camera-info, #loading-indicator {
+            position: absolute;
+            color: white;
+            font-family: Arial, sans-serif;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 10;
+        }
+        #info { top: 10px; left: 10px; }
+        #camera-info { top: 100px; left: 10px; width: 300px; }
+        #loading-indicator {
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+        }
+        #camera-select, #start-ar-button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        #start-ar-button {
+            background-color: #28a745;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        #start-ar-button:hover { background-color: #218838; }
+        #ar-container { display: none; width: 100%; height: 100%; }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <h2>AR Cube Viewer</h2>
+        <p>Scan the cube to see different 3D models on each side.</p>
+    </div>
+
+    <div id="camera-info">
+        <h3>Available Cameras:</h3>
+        <select id="camera-select"></select>
+        <p id="selected-camera">Choose a camera to start the AR experience.</p>
+        <button id="start-ar-button">Start AR</button>
+    </div>
+
+    <div id="loading-indicator">Loading AR Experience...</div>
+
+    <div id="ar-container"></div>
+
+    <script>
+        const models = [
+            { url: '2006__ford_gt_lm_spec_ll_test_car.glb', scale: '0.2 0.2 0.2' },
+            { url: 'airplane_engine.glb', scale: '0.1 0.1 0.1' },
+            { url: 'black_hole.glb', scale: '0.2 0.2 0.2' },
+            { url: 'cat.glb', scale: '0.9 0.9 0.9' },
+            { url: 'futuristic_building.glb', scale: '0.09 0.09 0.09' },
+            { url: 'plane.glb', scale: '0.1 0.1 0.1' }
+        ];
+
+        let currentModelIndex = 0;
+
+        async function initCameraSelection() {
+            try {
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                const videoInputDevices = devices.filter(device => device.kind === 'videoinput');
+
+                if (videoInputDevices.length === 0) {
+                    throw new Error('No video cameras found.');
+                }
+
+                const cameraSelect = document.getElementById('camera-select');
+                videoInputDevices.forEach((device, index) => {
+                    const option = document.createElement('option');
+                    option.value = device.deviceId;
+                    option.text = device.label || `Camera ${index + 1}`;
+                    cameraSelect.appendChild(option);
+                });
+
+                let selectedDevice = videoInputDevices.find(device =>
+                    device.label.toLowerCase().includes('rear') || 
+                    device.label.toLowerCase().includes('back')
+                ) || videoInputDevices[0];
+
+                cameraSelect.value = selectedDevice.deviceId;
+                updateSelectedCamera(selectedDevice);
+
+                cameraSelect.addEventListener('change', () => {
+                    selectedDevice = videoInputDevices.find(device => device.deviceId === cameraSelect.value);
+                    updateSelectedCamera(selectedDevice);
+                });
+
+                document.getElementById('start-ar-button').addEventListener('click', () => {
+                    if (selectedDevice) {
+                        document.getElementById('loading-indicator').style.display = 'block';
+                        initializeARScene(selectedDevice.deviceId);
+                    } else {
+                        alert('Please select a camera.');
+                    }
+                });
+
+            } catch (error) {
+                console.error('Error accessing the camera:', error);
+                document.getElementById('selected-camera').textContent = 'Error accessing the camera.';
+            }
+        }
+
+        function updateSelectedCamera(device) {
+            document.getElementById('selected-camera').textContent = `Active Camera: ${device.label || 'Unknown Camera'}`;
+        }
+
+        function initializeARScene(deviceId) {
+            const arContainer = document.getElementById('ar-container');
+            arContainer.innerHTML = `
+                <a-scene embedded arjs='sourceType: webcam; debugUIEnabled: false;' vr-mode-ui="enabled: false">
+                    <a-assets>
+                        ${models.map((model, index) => `
+                            <a-asset-item id="model-${index}" src="${model.url}"></a-asset-item>
+                        `).join('')}
+                    </a-assets>
+
+                    <a-marker type="pattern" url="patterns/pattern-1.patt" id="ar-marker">
+                        <a-entity id="model-container"></a-entity>
+                    </a-marker>
+
+                    <a-marker type="pattern" url="patterns/pattern-2.patt" id="ar-marker2">
+                        <a-entity id="model-container2"></a-entity>
+                    </a-marker>
+                    
+                    <a-marker type="pattern" url="patterns/pattern-3.patt" id="ar-marker3">
+                        <a-entity id="model-container3"></a-entity>
+                    </a-marker>
+
+                    <a-marker type="pattern" url="patterns/pattern-4.patt" id="ar-marker4">
+                        <a-entity id="model-container4"></a-entity>
+                    </a-marker>
+
+                    <a-marker type="pattern" url="patterns/pattern-5.patt" id="ar-marker5">
+                        <a-entity id="model-container5"></a-entity>
+                    </a-marker>
+
+                    <a-marker type="pattern" url="patterns/pattern-6.patt" id="ar-marker6">
+                        <a-entity id="model-container6"></a-entity>
+                    </a-marker>
+                    <a-entity camera></a-entity>
+                </a-scene>
+            `;
+
+            const modelContainer = document.querySelector('#model-container');
+            updateModel();
+
+            const marker = document.querySelector('#ar-marker');
+            marker.addEventListener('markerFound', () => {
+                currentModelIndex = (currentModelIndex + 1) % models.length;
+                updateModel();
+            });
+
+            setupTouchRotation(modelContainer);
+
+            document.getElementById('ar-container').style.display = 'block';
+            document.getElementById('camera-info').style.display = 'none';
+            document.getElementById('info').style.display = 'none';
+            document.getElementById('loading-indicator').style.display = 'none';
+        }
+
+        function updateModel() {
+            const modelContainer = document.querySelector('#model-container');
+            const currentModel = models[currentModelIndex];
+            modelContainer.innerHTML = `
+                <a-entity 
+                    gltf-model="#model-${currentModelIndex}"
+                    scale="${currentModel.scale}"
+                    position="0 0 0"
+                    rotation="0 0 0"
+                ></a-entity>
+            `;
+        }
+
+        function setupTouchRotation(modelContainer) {
+            let isMouseDown = false;
+            let lastX, lastY;
+
+            const rotateModel = (deltaX, deltaY) => {
+                const model = modelContainer.querySelector('a-entity');
+                const currentRotation = model.getAttribute('rotation');
+                model.setAttribute('rotation', {
+                    x: currentRotation.x + deltaY * 0.5,
+                    y: currentRotation.y + deltaX * 0.5,
+                    z: currentRotation.z
+                });
+            };
+
+            const handleStart = (clientX, clientY) => {
+                isMouseDown = true;
+                lastX = clientX;
+                lastY = clientY;
+            };
+
+            const handleMove = (clientX, clientY) => {
+                if (isMouseDown) {
+                    const deltaX = clientX - lastX;
+                    const deltaY = clientY - lastY;
+                    lastX = clientX;
+                    lastY = clientY;
+                    rotateModel(deltaX, deltaY);
+                }
+            };
+
+            const handleEnd = () => {
+                isMouseDown = false;
+            };
+
+            modelContainer.addEventListener('mousedown', (event) => handleStart(event.clientX, event.clientY));
+            modelContainer.addEventListener('mousemove', (event) => handleMove(event.clientX, event.clientY));
+            modelContainer.addEventListener('mouseup', handleEnd);
+            modelContainer.addEventListener('mouseleave', handleEnd);
+
+            modelContainer.addEventListener('touchstart', (event) => {
+                const touch = event.touches[0];
+                handleStart(touch.clientX, touch.clientY);
+            });
+            modelContainer.addEventListener('touchmove', (event) => {
+                const touch = event.touches[0];
+                handleMove(touch.clientX, touch.clientY);
+            });
+            modelContainer.addEventListener('touchend', handleEnd);
+        }
+
+        initCameraSelection();
+    </script>
+</body>
+</html>
