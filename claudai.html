@@ -173,67 +173,86 @@
             arContainer.innerHTML = `
                 <a-scene embedded arjs='sourceType: webcam;'>
                     <a-entity camera></a-entity>
-                <!-- Define the cube with 6 markers, each marker corresponding to a cube face, replaced with 3D models -->
-                
-                <a-marker type="pattern" url="patterns/pattern-1.patt" id="marker1">
-                    <a-entity id="model1" gltf-model="url(models/futuristic_building.glb)" 
-                            scale="0.09 0.09 0.09" 
-                            position="0 0 0"
-                            rotation="0 0 10"
-                            visible="true">
-                    </a-entity>
-                </a-marker>
+                    <!-- Define the cube with 6 markers, each marker corresponding to a cube face, replaced with 3D models -->
 
-                <a-marker type="pattern" url="patterns/pattern-2.patt" id="marker2">
-                    <a-entity id="model2" gltf-model="url(models/plane.glb)" 
-                            scale="0.09 0.09 0.09" 
-                            position="0 0 0"
-                            rotation="0 0 0"
-                            visible="false">
-                    </a-entity>
-                </a-marker>
-                
-                <a-marker type="pattern" url="patterns/pattern-3.patt" id="marker3">
+                    <a-marker type="pattern" url="patterns/pattern-1.patt" id="marker1">
+                        <a-entity id="model1" gltf-model="url(models/futuristic_building.glb)" 
+                                scale="0.09 0.09 0.09" 
+                                position="0 0 0"
+                                rotation="0 0 10">
+                        </a-entity>
+                    </a-marker>
+
+                    <a-marker type="pattern" url="patterns/pattern-2.patt" id="marker2">
+                        <a-entity id="model2" gltf-model="url(models/plane.glb)" 
+                                scale="0.09 0.09 0.09" 
+                                position="0 0 0"
+                                rotation="0 0 0">
+                        </a-entity>
+                    </a-marker>
+
+                    <a-marker type="pattern" url="patterns/pattern-3.patt" id="marker3">
                         <a-entity id="model3" gltf-model="url(models/2006__ford_gt_lm_spec_ll_test_car.glb)" 
-                                  scale="0.09 0.09 0.09" 
-                                  position="180 0 0"
-                                  visible="false">
+                                scale="0.09 0.09 0.09" 
+                                position="180 0 0">
                         </a-entity>
-                </a-marker>
+                    </a-marker>
 
-                <a-marker type="pattern" url="patterns/pattern-4.patt" id="marker4">
+                    <a-marker type="pattern" url="patterns/pattern-4.patt" id="marker4">
                         <a-entity id="model4" gltf-model="url(models/futuristic_building.glb)" 
-                                  scale="0.09 0.09 0.09" 
-                                  position="0 -60 0"
-                                  visible="false">
+                                scale="0.09 0.09 0.09" 
+                                position="0 -60 0">
                         </a-entity>
-                </a-marker>
+                    </a-marker>
 
-                <a-marker type="pattern" url="patterns/pattern-5.patt" id="marker5">
+                    <a-marker type="pattern" url="patterns/pattern-5.patt" id="marker5">
                         <a-entity id="model5" gltf-model="url(models/futuristic_building.glb)" 
-                                  scale="0.09 0.09 0.09" 
-                                  position="0 0 90"
-                                  visible="false">
+                                scale="0.09 0.09 0.09" 
+                                position="0 0 90">
                         </a-entity>
                     </a-marker>
 
                     <a-marker type="pattern" url="patterns/pattern-6.patt" id="marker6">
                         <a-entity id="model6" gltf-model="url(models/futuristic_building.glb)" 
-                                  scale="0.09 0.09 0.09" 
-                                  position="0 0 0"
-                                  rotation="0 180 0"
-                                  visible="false">
+                                scale="0.09 0.09 0.09" 
+                                position="0 0 0"
+                                rotation="0 180 0">
                         </a-entity>
                     </a-marker>
-
-                    <a-entity id="marker-handler" 
-                              event-set__enter="_event: markerFound; scale: 1.0"
-                              event-set__leave="_event: markerLost; scale: 0">
-                    </a-entity>
                 </a-scene>
             `;
 
-            modelEntity = document.querySelector('a-entity[id="model1"]');
+            // Object to hold model references
+            const models = {
+                marker1: document.querySelector('#model1'),
+                marker2: document.querySelector('#model2'),
+                marker3: document.querySelector('#model3'),
+                marker4: document.querySelector('#model4'),
+                marker5: document.querySelector('#model5'),
+                marker6: document.querySelector('#model6')
+            };
+
+            // Function to hide all models
+            function hideAllModels() {
+                for (let modelId in models) {
+                    models[modelId].setAttribute('visible', 'false');
+                }
+            }
+
+            // Event listener for marker found
+            document.querySelectorAll('a-marker').forEach(marker => {
+                marker.addEventListener('markerFound', function() {
+                    hideAllModels(); // Hide all models first
+                    const modelId = this.id; // Get the ID of the found marker
+                    models[modelId].setAttribute('visible', 'true'); // Show the corresponding model
+                });
+
+                marker.addEventListener('markerLost', function() {
+                    const modelId = this.id; // Get the ID of the lost marker
+                    models[modelId].setAttribute('visible', 'false'); // Hide the model
+                });
+            });
+
 
             // Handle zoom functionality
             let scale = 0.09; // Default scale
