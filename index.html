@@ -103,21 +103,17 @@
                 if (constraints.video && selectedDeviceId) {
                     constraints.video = {
                         ...constraints.video,
-                        deviceId: { exact: selectedDeviceId },
-                        width: { ideal: 1280 },   // Example width constraint
-                        height: { ideal: 720 },   // Example height constraint
-                        aspectRatio: { ideal: 1.777777778 }, // 16:9 aspect ratio
+                        deviceId: { exact: selectedDeviceId }
                     };
                 }
                 return originalGetUserMedia(constraints);
             };
         }
 
-
         async function initializeARScene() {
             const arContainer = document.getElementById('ar-container');
             arContainer.innerHTML = `
-                <a-scene embedded arjs='sourceType: webcam; detectionMode: mono_and_matrix; matrixCodeType: 3x3; cameraParametersUrl: ../data/camera_para.dat;'>
+                <a-scene embedded arjs='sourceType: webcam; detectionMode: mono;'>
                     <a-marker type="pattern" url="pattern2/pattern-a1.patt" id="marker1">
                         <a-entity id="model-container-1" gltf-model="url(glb/CPU.glb)" 
                                   scale="0.4 0.4 0.4" 
