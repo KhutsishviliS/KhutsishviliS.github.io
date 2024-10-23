@@ -178,7 +178,7 @@
 
             initializeMarkerEvents();
             initializeRotation();
-            //initializeZoom();
+            initializeZoom();
         }
 
         function initializeMarkerEvents() {
@@ -294,7 +294,7 @@
 
             arContainer.addEventListener('touchend', () => isInteracting = false);
         }
-/*
+
         function initializeZoom() {
             const arContainer = document.getElementById('ar-container');
 
@@ -368,7 +368,7 @@
                     lastTouchDistance = null;
                 }
             });
-        }*/
+        }
 
         window.onload = () => {
             const cameraId = getUrlParameter('cameraId');
