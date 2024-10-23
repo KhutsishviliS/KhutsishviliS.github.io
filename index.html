@@ -103,12 +103,19 @@
                 if (constraints.video && selectedDeviceId) {
                     constraints.video = {
                         ...constraints.video,
-                        deviceId: { exact: selectedDeviceId }
+                        deviceId: { exact: selectedDeviceId },
+                        // Add explicit constraints to avoid automatic zoom
+                        width: { ideal: 1280 },  // You can adjust based on your needs
+                        height: { ideal: 720 },
+                        aspectRatio: { ideal: 1.7777777778 }, // 16:9 aspect ratio
+                        zoom: { ideal: 1 }, // Ensure no zoom is applied
+                        facingMode: 'environment' // Use rear camera explicitly
                     };
                 }
                 return originalGetUserMedia(constraints);
             };
         }
+
 
         async function initializeARScene() {
             const arContainer = document.getElementById('ar-container');
