@@ -10,77 +10,7 @@
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-        #info {
-            display: none;
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            color: white;
-            font-family: Arial, sans-serif;
-            z-index: 10;
-            background-color: rgba(0, 0, 0, 0.5);
-            padding: 10px;
-            border-radius: 5px;
-        }
-        #camera-info {
-            position: absolute;
-            top: 100px;
-            left: 10px;
-            color: white;
-            font-family: Arial, sans-serif;
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 20px;
-            border-radius: 10px;
-            z-index: 10;
-            max-height: 80vh;
-            overflow-y: auto;
-            width: 300px;
-        }
-        #camera-select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            font-size: 16px;
-        }
-        #start-ar-button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #28a745;
-            border: none;
-            color: white;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        #start-ar-button:hover {
-            background-color: #218838;
-        }
-        #ar-container {
-            display: none;
-            width: 1080px;
-            height: 720px;
-        }
-        #loading-indicator {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-family: Arial, sans-serif;
-            background-color: rgba(0, 0, 0, 0.8);
-            padding: 20px;
-            border-radius: 10px;
-            z-index: 10;
-            display: none;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="info">
@@ -108,12 +38,7 @@
 
         async function initCameraSelection() {
             try {
-                const initialStream = await navigator.mediaDevices.getUserMedia({
-                        video: {
-                            width: { ideal: 1080 },
-                            height: { ideal: 720 }
-                        }
-                    });
+                const initialStream = await navigator.mediaDevices.getUserMedia({video: true });
                 console.log(initialStream)
                 initialStream.getTracks().forEach(track => track.stop());
                 const devices = await navigator.mediaDevices.enumerateDevices();
@@ -178,17 +103,21 @@
                 if (constraints.video && selectedDeviceId) {
                     constraints.video = {
                         ...constraints.video,
-                        deviceId: { exact: selectedDeviceId }
+                        deviceId: { exact: selectedDeviceId },
+                        width: { ideal: 1280 },   // Example width constraint
+                        height: { ideal: 720 },   // Example height constraint
+                        aspectRatio: { ideal: 1.777777778 }, // 16:9 aspect ratio
                     };
                 }
                 return originalGetUserMedia(constraints);
             };
         }
 
+
         async function initializeARScene() {
             const arContainer = document.getElementById('ar-container');
             arContainer.innerHTML = `
-                <a-scene embedded arjs='sourceType: webcam; detectionMode: mono;'>
+                <a-scene embedded arjs='sourceType: webcam; detectionMode: mono_and_matrix; matrixCodeType: 3x3; cameraParametersUrl: ../data/camera_para.dat;'>
                     <a-marker type="pattern" url="pattern2/pattern-a1.patt" id="marker1">
                         <a-entity id="model-container-1" gltf-model="url(glb/CPU.glb)" 
                                   scale="0.4 0.4 0.4" 
@@ -231,7 +160,7 @@
                                   rotation="0 0 0" 
                                   visible="false"></a-entity>
                     </a-marker>
-                    <a-entity camera></a-entity>
+                    <a-entity camera="fov:70"></a-entity>
                 </a-scene>
             `;
 
