@@ -105,11 +105,12 @@
                         ...constraints.video,
                         deviceId: { exact: selectedDeviceId },
                         // Add explicit constraints to avoid automatic zoom
-                        width: { ideal: 2960 },  // You can adjust based on your needs
-                        height: { ideal: 1440 },
+                        width: { ideal: 640 },  // You can adjust based on your needs
+                        height: { ideal: 480 },
                         aspectRatio: { ideal: 1.777777778 }, // 16:9 aspect ratio
                         zoom: false, // Ensure no zoom is applied
-                        facingMode: 'environment' // Use rear camera explicitly
+                        facingMode: 'environment', // Use rear camera explicitly
+                        advanced:[{zoom:false}]
                     };
                 }
                 return originalGetUserMedia(constraints);
