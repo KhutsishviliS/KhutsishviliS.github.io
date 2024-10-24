@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AR.js App</title>
+    <title>AR.js App - No Zoom on Android</title>
 
     <!-- Include A-Frame -->
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
@@ -17,6 +17,18 @@
     <!-- Include Gesture Detection for Interaction -->
     <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-detector.js"></script>
     <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-handler.js"></script>
+
+    <script>
+      // Apply constraints to prevent zoom
+      navigator.mediaDevices.getUserMedia({
+        video: {
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+          facingMode: 'environment',
+          zoom: false // Explicitly disable zoom
+        }
+      });
+    </script>
   </head>
 
   <body style="margin: 0; overflow: hidden;">
@@ -56,8 +68,13 @@
         ></a-entity>
       </a-marker>
 
-      <!-- Camera Entity -->
-      <a-entity camera></a-entity>
+      <!-- Camera Entity with Fixed FoV to prevent zoom -->
+      <a-entity 
+        camera 
+        position="0 0 0" 
+        look-controls 
+        camera="active: true; fov: 80;" 
+      ></a-entity>
     </a-scene>
   </body>
 </html>
