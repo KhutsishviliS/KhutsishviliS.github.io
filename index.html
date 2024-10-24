@@ -110,9 +110,7 @@
                         aspectRatio: { ideal: 1.777777778 }, // 16:9 aspect ratio
                         zoom: false, // Ensure no zoom is applied
                         facingMode: 'environment', // Use rear camera explicitly
-                        advanced:[{zoom:0},
-                            
-                        ]
+                        advanced:[{zoom:false}]
                     };
                 }
                 return originalGetUserMedia(constraints);

@@ -54,37 +54,37 @@
       });
 
       // Override getUserMedia before any other scripts run
-      const originalGetUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
-      navigator.mediaDevices.getUserMedia = async function(constraints) {
-        if (constraints.video) {
-          constraints.video = {
-            ...constraints.video,
-            width: { min: 640, ideal: 1280, max: 1920 },
-            height: { min: 480, ideal: 720, max: 1080 },
-            facingMode: { exact: 'environment' },
-            zoom: false,
-            // Removed focusMode as it might interfere with marker detection
-            advanced: [
-              { zoom: 0 }
-            ]
-          };
-        }
-        try {
-          return await originalGetUserMedia(constraints);
-        } catch (error) {
-          console.error('MediaDevices error:', error);
-          if (constraints.video) {
-            // Simplified fallback constraints
-            constraints.video = {
-              facingMode: 'environment',
-              width: { ideal: 640 },
-              height: { ideal: 480 }
-            };
-            return await originalGetUserMedia(constraints);
-          }
-          throw error;
-        }
-      };
+    //   const originalGetUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+    //   navigator.mediaDevices.getUserMedia = async function(constraints) {
+    //     if (constraints.video) {
+    //       constraints.video = {
+    //         ...constraints.video,
+    //         width: { min: 640, ideal: 1280, max: 1920 },
+    //         height: { min: 480, ideal: 720, max: 1080 },
+    //         facingMode: { exact: 'environment' },
+    //         zoom: false,
+    //         // Removed focusMode as it might interfere with marker detection
+    //         advanced: [
+    //           { zoom: 0 }
+    //         ]
+    //       };
+    //     }
+    //     try {
+    //       return await originalGetUserMedia(constraints);
+    //     } catch (error) {
+    //       console.error('MediaDevices error:', error);
+    //       if (constraints.video) {
+    //         // Simplified fallback constraints
+    //         constraints.video = {
+    //           facingMode: 'environment',
+    //           width: { ideal: 640 },
+    //           height: { ideal: 480 }
+    //         };
+    //         return await originalGetUserMedia(constraints);
+    //       }
+    //       throw error;
+    //     }
+    //   };
 
       document.addEventListener('DOMContentLoaded', function() {
         // Prevent pinch zoom
