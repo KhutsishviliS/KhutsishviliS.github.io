@@ -2,35 +2,99 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>AR.js App - No Zoom on Android</title>
-
-    <!-- Include A-Frame -->
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
-
-    <!-- Include AR.js for A-Frame -->
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-
-    <!-- Include A-Frame Extras for GLTF Loader -->
     <script src="https://raw.githack.com/donmccurdy/aframe-extras/master/dist/aframe-extras.loaders.min.js"></script>
-
-    <!-- Include Gesture Detection for Interaction -->
     <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-detector.js"></script>
     <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-handler.js"></script>
+    
+    <style>
+      /* Prevent pinch zoom */
+      body {
+        touch-action: none;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
+      }
+    </style>
 
     <script>
-      // Apply constraints to prevent zoom
-      navigator.mediaDevices.getUserMedia({
-        video: {
-          width: { ideal: 1280 },
-          height: { ideal: 720 },
-          facingMode: 'environment',
-          zoom: false // Explicitly disable zoom
+      // Override getUserMedia before any other scripts run
+      const originalGetUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+      navigator.mediaDevices.getUserMedia = async function(constraints) {
+        // Ensure video constraints exist
+        if (constraints.video) {
+          constraints.video = {
+            ...constraints.video,
+            width: { min: 640, ideal: 1280, max: 1920 },
+            height: { min: 480, ideal: 720, max: 1080 },
+            facingMode: { exact: 'environment' },
+            zoom: false,
+            focusMode: 'continuous',
+            // Advanced constraints to prevent zoom
+            advanced: [
+              { zoom: 0 },
+              { focusDistance: { ideal: 0 } }
+            ]
+          };
         }
+        try {
+          return await originalGetUserMedia(constraints);
+        } catch (error) {
+          console.error('MediaDevices error:', error);
+          // Fallback to basic constraints if advanced ones fail
+          if (constraints.video) {
+            constraints.video = {
+              facingMode: 'environment',
+              width: { ideal: 1280 },
+              height: { ideal: 720 }
+            };
+            return await originalGetUserMedia(constraints);
+          }
+          throw error;
+        }
+      };
+
+      // Additional zoom prevention
+      document.addEventListener('DOMContentLoaded', function() {
+        // Prevent default touch behaviors
+        document.addEventListener('touchstart', function(e) {
+          if (e.touches.length > 1) {
+            e.preventDefault();
+          }
+        }, { passive: false });
+
+        document.addEventListener('touchmove', function(e) {
+          if (e.touches.length > 1) {
+            e.preventDefault();
+          }
+        }, { passive: false });
+
+        // Get the video element once AR.js creates it
+        setTimeout(() => {
+          const video = document.querySelector('video');
+          if (video) {
+            // Attempt to disable zoom programmatically
+            video.style.objectFit = 'cover';
+            // Try to force initial zoom level
+            if (video.mediaStream) {
+              const track = video.mediaStream.getVideoTracks()[0];
+              if (track && track.getCapabilities && track.getConstraints) {
+                const capabilities = track.getCapabilities();
+                if (capabilities.zoom) {
+                  track.applyConstraints({
+                    advanced: [{ zoom: 1.0 }]
+                  }).catch(console.error);
+                }
+              }
+            }
+          }
+        }, 1000);
       });
     </script>
   </head>
-
   <body style="margin: 0; overflow: hidden;">
     <a-scene
       vr-mode-ui="enabled: false;"
@@ -41,13 +105,9 @@
       embedded
       gesture-detector
     >
-      <!-- Asset Management System -->
       <a-assets>
-        <!-- GLB model for the cat -->
         <a-asset-item id="animated-asset" src="glb/cat.glb"></a-asset-item>
       </a-assets>
-
-      <!-- Marker Definition -->
       <a-marker
         id="animated-marker"
         type="pattern"
@@ -56,24 +116,26 @@
         raycaster="objects: .clickable"
         emitevents="true"
         cursor="fuse: false; rayOrigin: mouse;"
+        smooth="true"
+        smoothCount="10"
+        smoothTolerance="0.01"
+        smoothThreshold="5"
       >
-        <!-- GLTF Model Entity with Gesture Handler -->
         <a-entity
           id="cat-model"
           scale="4.98 4.98 4.98"
           animation-mixer="loop: repeat"
           gltf-model="#animated-asset"
           class="clickable"
-          gesture-handler
+          gesture-handler="minScale: 0.25; maxScale: 10"
         ></a-entity>
       </a-marker>
-
-      <!-- Camera Entity with Fixed FoV to prevent zoom -->
-      <a-entity 
-        camera 
-        position="0 0 0" 
-        look-controls 
-        camera="active: true; fov: 80;" 
+      <a-entity
+        camera
+        position="0 0 0"
+        look-controls="enabled: false"
+        camera="active: true; fov: 80; zoom: 1;"
+        arjs-look-controls="smoothingFactor: 0.1"
       ></a-entity>
     </a-scene>
   </body>
