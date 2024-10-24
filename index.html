@@ -36,7 +36,7 @@
             return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
         }
 
-        /*async function initCameraSelection() {
+        async function initCameraSelection() {
             try {
                 const initialStream = await navigator.mediaDevices.getUserMedia({video: true });
                 console.log(initialStream)
@@ -95,7 +95,7 @@
                 console.error('Fehler beim Zugriff auf die Kamera:', error);
                 document.getElementById('selected-camera').textContent = 'Fehler beim Zugriff auf die Kamera.';
             }
-        }*/
+        }
 
         function overrideGetUserMedia(selectedDeviceId) {
             const originalGetUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
@@ -371,7 +371,7 @@
             });
         }
 
-       /* window.onload = () => {
+        window.onload = () => {
             const cameraId = getUrlParameter('cameraId');
             if (cameraId) {
                 overrideGetUserMedia(cameraId);
@@ -379,7 +379,7 @@
             } else {
                 initCameraSelection();
             }
-        };*/
+        };
     </script>
 </body>
 </html>
