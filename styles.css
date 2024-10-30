@@ -29,10 +29,10 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 .navbar-content {
-    max-width: 1800px;
+    max-width: 1200px;
     margin: 0 auto;
     display: flex;
-    justify-content: space-between;
+    justify-content:left;
     align-items: center;
 }
 .logo {
