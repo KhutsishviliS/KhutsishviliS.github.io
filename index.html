@@ -302,57 +302,57 @@
          * Funktion zur Initialisierung der Marker-Events
          * - Verfolgt das aktuell sichtbare Marker und Modell
          */
-         const MIN_SCALE = 0.25;
-    const MAX_SCALE = 3.0;
+            const MIN_SCALE = 0.25;
+            const MAX_SCALE = 3.0;
 
-    // Global variables for touch zoom
-    let initialPinchDistance = null;
-    let initialScale = 1;
+            // Global variables for touch zoom
+            let initialPinchDistance = null;
+            let initialScale = 1;
 
-    // Function to clamp the scale within the set limits
-    function clampScale(scale) {
-        return Math.min(MAX_SCALE, Math.max(MIN_SCALE, scale));
-    }
+            // Function to clamp the scale within the set limits
+            function clampScale(scale) {
+                return Math.min(MAX_SCALE, Math.max(MIN_SCALE, scale));
+            }
 
-    // Mouse wheel event for desktop zoom
-    document.addEventListener('wheel', function(event) {
-        if (currentModel) {
-            // Adjust scale based on wheel direction
-            let newScale = currentModel.object3D.scale.x + (event.deltaY * -0.001);
-            newScale = clampScale(newScale);
+            // Mouse wheel event for desktop zoom
+            document.addEventListener('wheel', function(event) {
+                if (currentModel) {
+                    // Adjust scale based on wheel direction
+                    let newScale = currentModel.object3D.scale.x + (event.deltaY * -0.001);
+                    newScale = clampScale(newScale);
 
-            // Apply new scale to the current model
-            currentModel.object3D.scale.set(newScale, newScale, newScale);
-        }
-    });
+                    // Apply new scale to the current model
+                    currentModel.object3D.scale.set(newScale, newScale, newScale);
+                }
+            });
 
-    // Touch events for mobile pinch-to-zoom
-    document.addEventListener('touchstart', function(event) {
-        if (event.touches.length === 2) {
-            // Store the initial distance and scale when pinch starts
-            initialPinchDistance = getPinchDistance(event.touches);
-            initialScale = currentModel ? currentModel.object3D.scale.x : 1;
-        }
-    });
+            // Touch events for mobile pinch-to-zoom
+            document.addEventListener('touchstart', function(event) {
+                if (event.touches.length === 2) {
+                    // Store the initial distance and scale when pinch starts
+                    initialPinchDistance = getPinchDistance(event.touches);
+                    initialScale = currentModel ? currentModel.object3D.scale.x : 1;
+                }
+            });
 
-    document.addEventListener('touchmove', function(event) {
-        if (event.touches.length === 2 && currentModel) {
-            // Calculate the new pinch distance and scale
-            const pinchDistance = getPinchDistance(event.touches);
-            let scaleChange = pinchDistance / initialPinchDistance;
-            let newScale = clampScale(initialScale * scaleChange);
+            document.addEventListener('touchmove', function(event) {
+                if (event.touches.length === 2 && currentModel) {
+                    // Calculate the new pinch distance and scale
+                    const pinchDistance = getPinchDistance(event.touches);
+                    let scaleChange = pinchDistance / initialPinchDistance;
+                    let newScale = clampScale(initialScale * scaleChange);
 
-            // Apply the scaled value to the current model
-            currentModel.object3D.scale.set(newScale, newScale, newScale);
-        }
-    });
+                    // Apply the scaled value to the current model
+                    currentModel.object3D.scale.set(newScale, newScale, newScale);
+                }
+            });
 
-    // Helper function to calculate distance between two touch points
-    function getPinchDistance(touches) {
-        const dx = touches[0].clientX - touches[1].clientX;
-        const dy = touches[0].clientY - touches[1].clientY;
-        return Math.sqrt(dx * dx + dy * dy);
-    }
+            // Helper function to calculate distance between two touch points
+            function getPinchDistance(touches) {
+                const dx = touches[0].clientX - touches[1].clientX;
+                const dy = touches[0].clientY - touches[1].clientY;
+                return Math.sqrt(dx * dx + dy * dy);
+            }
 
          ///////////
         function initializeMarkerEvents() {
