@@ -12,7 +12,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <!-- Optional: Füge GLTFLoader hinzu, falls du GLTF/GLB-Modelle laden möchtest -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    
+    <script src="//cdn.8thwall.com/web/aframe/aframe-extras-6.1.1.min.js"></script>
     <link rel="stylesheet" href="styles.css">
+
+
 </head>
 <body>
         <!-- Navbar Section -->
@@ -181,7 +185,7 @@
                 <a-scene embedded arjs='sourceType: webcam; detectionMode: mono;'>
                     <!-- Assets vorab laden -->
                     <a-assets>
-                        <a-asset-item id="model1" src="glb/Lüfter_Ventilator.glb"></a-asset-item>
+                        <a-asset-item id="model1" src="glb/2.0 Lüfter_Ventilator.glb"></a-asset-item>
                         <a-asset-item id="model2" src="glb/nochamlSSD.glb"></a-asset-item>
                         <a-asset-item id="model3" src="glb/CPUdisassembled.glb"></a-asset-item>
                         <a-asset-item id="model4" src="glb/plane.glb"></a-asset-item>
@@ -195,11 +199,13 @@
                     <a-marker type="pattern" url="pattern2/pattern-a1.patt" id="marker1">
                         <a-entity id="model-container-1"
                                   gltf-model="#model1"
+                                  animation-mixer="clip: *; loop: repeat; timeScale: 1"
                                   scale="1 1 1"  
                                   position="0 0 0"
                                   rotation="-90 0 0"
                                   rotation-order="XYZ"
                                   visible="false">
+                                  
                         </a-entity>
                     </a-marker>
  
@@ -235,7 +241,20 @@
                                   position="0 0 0"
                                    rotation="-90 0 0"
                                   rotation-order="XYZ"
-                                  visible="false">
+                                  visible="false"
+                                  animation-mixer="loop: repeat; clampWhenFinished: true"
+
+                            animation="property: rotation; 
+                                to: -90 360 0; 
+                                dur: 9000; 
+                                easing: linear; 
+                                loop: true"
+
+                            animation__2="property: scale; 
+                                            to: 1.2 1.2 1.2; 
+                                            dur: 2000; 
+                                            dir: alternate;
+                                            loop: true">
                         </a-entity>
                     </a-marker>
  
@@ -283,6 +302,59 @@
          * Funktion zur Initialisierung der Marker-Events
          * - Verfolgt das aktuell sichtbare Marker und Modell
          */
+         const MIN_SCALE = 0.25;
+    const MAX_SCALE = 3.0;
+
+    // Global variables for touch zoom
+    let initialPinchDistance = null;
+    let initialScale = 1;
+
+    // Function to clamp the scale within the set limits
+    function clampScale(scale) {
+        return Math.min(MAX_SCALE, Math.max(MIN_SCALE, scale));
+    }
+
+    // Mouse wheel event for desktop zoom
+    document.addEventListener('wheel', function(event) {
+        if (currentModel) {
+            // Adjust scale based on wheel direction
+            let newScale = currentModel.object3D.scale.x + (event.deltaY * -0.001);
+            newScale = clampScale(newScale);
+
+            // Apply new scale to the current model
+            currentModel.object3D.scale.set(newScale, newScale, newScale);
+        }
+    });
+
+    // Touch events for mobile pinch-to-zoom
+    document.addEventListener('touchstart', function(event) {
+        if (event.touches.length === 2) {
+            // Store the initial distance and scale when pinch starts
+            initialPinchDistance = getPinchDistance(event.touches);
+            initialScale = currentModel ? currentModel.object3D.scale.x : 1;
+        }
+    });
+
+    document.addEventListener('touchmove', function(event) {
+        if (event.touches.length === 2 && currentModel) {
+            // Calculate the new pinch distance and scale
+            const pinchDistance = getPinchDistance(event.touches);
+            let scaleChange = pinchDistance / initialPinchDistance;
+            let newScale = clampScale(initialScale * scaleChange);
+
+            // Apply the scaled value to the current model
+            currentModel.object3D.scale.set(newScale, newScale, newScale);
+        }
+    });
+
+    // Helper function to calculate distance between two touch points
+    function getPinchDistance(touches) {
+        const dx = touches[0].clientX - touches[1].clientX;
+        const dy = touches[0].clientY - touches[1].clientY;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+         ///////////
         function initializeMarkerEvents() {
             const markers = document.querySelectorAll('a-marker');
             let currentVisibleMarker = null;
@@ -306,6 +378,19 @@
  
                     currentVisibleMarker = marker;
                 });
+
+                
+                document.addEventListener('DOMContentLoaded', () => {
+                    const modelContainer = document.querySelector('#model-container-1');
+
+                    // Check if model has loaded
+                    modelContainer.addEventListener('model-loaded', () => {
+                        // Attach animation-mixer with specified clip name (if known)
+                        modelContainer.setAttribute('animation-mixer', 'loop: repeat; clampWhenFinished: false');
+                        console.log("Animation-mixer added to model-container-1");
+                    });
+                });
+
  
                 marker.addEventListener('markerLost', () => {
                     // Verstecke das Modell, wenn der Marker verloren geht
@@ -394,6 +479,9 @@
         window.onload = () => {
             initCameraSelection();
         };
+
+
+    
     </script>
 </body>
 </html>
