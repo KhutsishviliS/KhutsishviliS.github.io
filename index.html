@@ -11,7 +11,7 @@
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <!-- Optional: Füge GLTFLoader hinzu, falls du GLTF/GLB-Modelle laden möchtest -->
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <!--<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>-->
     
     <script src="//cdn.8thwall.com/web/aframe/aframe-extras-6.1.1.min.js"></script>
     <link rel="stylesheet" href="styles.css">
@@ -182,13 +182,13 @@
             // Erstelle die A-Frame Szene mit <a-assets> für das Preloading
             const arContainer = document.getElementById('ar-container');
             arContainer.innerHTML = `
-                <a-scene  embedded arjs='patternRatio: 0.9; sourceType: webcam; detectionMode: mono;'>
+                <a-scene  embedded arjs='patternRatio: 0.5; sourceType: webcam; detectionMode: mono;'>
                     <!-- Assets vorab laden -->
                     <a-assets>
                         <a-asset-item id="model1" src="glb/2.0 Lüfter_Ventilator.glb"></a-asset-item>
                         <a-asset-item id="model2" src="glb/nochamlSSD.glb"></a-asset-item>
                         <a-asset-item id="model3" src="glb/CPUdisassembled.glb"></a-asset-item>
-                        <a-asset-item id="model4" src="glb/plane.glb"></a-asset-item>
+                        <a-asset-item id="model4" src="glb/CPU_mit_animation.glb"></a-asset-item>
                         <a-asset-item id="model5" src="glb/futuristic_building(1).glb"></a-asset-item>
                         <a-asset-item id="model6" src="glb/2006__ford_gt_lm_spec_ll_test_car.glb"></a-asset-item>
                     </a-assets>
@@ -196,7 +196,7 @@
                     <!-- Marker für die 6 Seiten eines Würfels -->
                    
                     <!-- Marker 1 -->
-                    <a-marker type="pattern" url="pattern2/pattern-a1.patt" id="marker1">
+                    <a-marker type="pattern" url="pattern2/pattern-Untitled.patt" id="marker1">
                         <a-entity id="model-container-1"
                                   gltf-model="#model1"
                                   animation-mixer="clip: *; loop: repeat; timeScale: 1"
@@ -224,7 +224,7 @@
                     <!-- Marker 3 -->
                     <a-marker type="pattern" url="pattern2/pattern-a3.patt" id="marker3">
                         <a-entity id="model-container-3"
-                                  gltf-model="#model3"9
+                                  gltf-model="#model3"
                                   scale="0.1 0.1 0.1"  
                                   position="0 0 0"
                                    rotation="-90 0 0"
@@ -242,19 +242,7 @@
                                    rotation="-90 0 0"
                                   rotation-order="XYZ"
                                   visible="false"
-                                  animation-mixer="loop: repeat; clampWhenFinished: true"
-
-                            animation="property: rotation; 
-                                to: -90 360 0; 
-                                dur: 9000; 
-                                easing: linear; 
-                                loop: true"
-
-                            animation__2="property: scale; 
-                                            to: 1.2 1.2 1.2; 
-                                            dur: 2000; 
-                                            dir: alternate;
-                                            loop: true">
+                                  animation-mixer="clip: *; loop: repeat; timeScale: 1"
                         </a-entity>
                     </a-marker>
  
@@ -302,7 +290,7 @@
          * Funktion zur Initialisierung der Marker-Events
          * - Verfolgt das aktuell sichtbare Marker und Modell
          */
-            const MIN_SCALE = 0.25;
+            const MIN_SCALE = 0.01;
             const MAX_SCALE = 3.0;
 
             // Global variables for touch zoom
