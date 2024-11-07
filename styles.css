@@ -13,7 +13,7 @@
     font-family: system-ui, -apple-system, sans-serif;
 }
 
-    /* body {
+    body {
     background-color: var(--background-color);
     color: var(--text-color);
     width: 100%;
@@ -22,28 +22,8 @@
     flex-direction:column;
     overflow: hidden;
     /* min-height: 100vh; */
+    }
     
-     */
-
-     html {
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        position: relative;
-    }
-
-    body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        touch-action: manipulation;
-        -webkit-text-size-adjust: none;
-        position: relative;
-        display: flex;
-        flex-direction: column;
-    }
 .navbar {
     padding: 1.5rem;
     background-color: white;
