@@ -16,6 +16,21 @@
     <script src="//cdn.8thwall.com/web/aframe/aframe-extras-6.1.1.min.js"></script>
     <link rel="stylesheet" href="styles.css">
 
+    <meta name="HandheldFriendly" content="true">
+    <style>
+        /* Disable touch zooming */
+        html, body {
+            touch-action: none;
+            touch-action: pan-x pan-y;
+            -ms-touch-action: none;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            overflow: hidden;
+        }
+    </style>
 
 </head>
 <body>
@@ -438,6 +453,11 @@
             lastMouseY = event.clientY;
         });
  
+        document.addEventListener('touchmove', function(event) {
+            if (event.scale !== 1) {
+                event.preventDefault();
+            }
+        }, { passive: false });
         // Touch-Unterstützung für mobile Geräte
         document.addEventListener('touchstart', function(event) {
             isMouseDown = true;
