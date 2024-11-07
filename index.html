@@ -12,9 +12,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <!-- Optional: Füge GLTFLoader hinzu, falls du GLTF/GLB-Modelle laden möchtest -->
     <!--<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>-->
-    
     <script src="//cdn.8thwall.com/web/aframe/aframe-extras-6.1.1.min.js"></script>
     <link rel="stylesheet" href="styles.css">
+
+
     <meta name="HandheldFriendly" content="true">
     <style>
         * {
@@ -23,23 +24,26 @@
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
+            box-sizing: border-box;
         }
 
-        html, body {
-            position: fixed;
+/* 
+        #hero {
+            width: 100%;
+            height: auto;
+            position: relative;
+        }
+
+        #ar-container {
             width: 100%;
             height: 100%;
-            overflow: hidden;
-            touch-action: manipulation;
-            -ms-touch-action: manipulation;
-            -webkit-text-size-adjust: none;
+            position: relative;
         }
 
-        body {
-            margin: 0;
-            padding: 0;
-            overscroll-behavior: none;
-        }
+        .navbar-content {
+            width: 100%;
+            position: relative;
+        } */
     </style>
 
 </head>
@@ -463,8 +467,33 @@
             lastMouseY = event.clientY;
         });
  
+        // Touch-Unterstützung für mobile Geräte
+        document.addEventListener('touchstart', function(event) {
+            isMouseDown = true;
+            lastMouseX = event.touches[0].clientX;
+            lastMouseY = event.touches[0].clientY;
+        });
+ 
+        document.addEventListener('touchend', function() {
+            isMouseDown = false;
+        });
+ 
+        document.addEventListener('touchmove', function(event) {
+            if (!isMouseDown || !currentModel) return;
+ 
+            const deltaX = event.touches[0].clientX - lastMouseX;
+            const deltaY = event.touches[0].clientY - lastMouseY;
+ 
+            let object3D = currentModel.object3D;
+ 
+            object3D.rotation.y += deltaX * 0.01;
+            object3D.rotation.x += deltaY * 0.01;
+ 
+            lastMouseX = event.touches[0].clientX;
+            lastMouseY = event.touches[0].clientY;
+        });
 
-
+        // Here starts implementation from Claude AI
         let lastTouchEnd = 0;
         document.addEventListener('touchend', function(event) {
             const now = Date.now();
@@ -474,14 +503,14 @@
             lastTouchEnd = now;
         }, false);
 
-        // Prevent zoom on pinch
+        // Prevent pinch zoom
         document.addEventListener('touchmove', function(event) {
             if (event.touches.length > 1) {
                 event.preventDefault();
             }
         }, { passive: false });
 
-        // Prevent zoom on gesture
+        // Prevent gesture zooming
         document.addEventListener('gesturestart', function(event) {
             event.preventDefault();
         });
@@ -494,7 +523,7 @@
             event.preventDefault();
         });
 
-        // Lock viewport on load and orientation change
+        // Lock viewport
         function lockViewport() {
             const viewport = document.querySelector('meta[name="viewport"]');
             if (viewport) {
@@ -505,33 +534,7 @@
         window.addEventListener('load', lockViewport);
         window.addEventListener('orientationchange', lockViewport);
         window.addEventListener('resize', lockViewport);
-
-
-        // // Touch-Unterstützung für mobile Geräte
-        // document.addEventListener('touchstart', function(event) {
-        //     isMouseDown = true;
-        //     lastMouseX = event.touches[0].clientX;
-        //     lastMouseY = event.touches[0].clientY;
-        // });
- 
-        // document.addEventListener('touchend', function() {
-        //     isMouseDown = false;
-        // });
- 
-        // document.addEventListener('touchmove', function(event) {
-        //     if (!isMouseDown || !currentModel) return;
- 
-        //     const deltaX = event.touches[0].clientX - lastMouseX;
-        //     const deltaY = event.touches[0].clientY - lastMouseY;
- 
-        //     let object3D = currentModel.object3D;
- 
-        //     object3D.rotation.y += deltaX * 0.01;
-        //     object3D.rotation.x += deltaY * 0.01;
- 
-        //     lastMouseX = event.touches[0].clientX;
-        //     lastMouseY = event.touches[0].clientY;
-        // });
+        // Here ends implementation from Claude AI  
  
         window.onload = () => {
             initCameraSelection();
