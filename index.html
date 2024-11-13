@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="styles.css">
 
 
-    <meta name="HandheldFriendly" content="true">
+    <!-- <meta name="HandheldFriendly" content="true"> -->
    
 
 </head>
@@ -189,8 +189,8 @@
                     <a-assets>
                         <a-asset-item id="model1" src="glb/2.0 Lüfter_Ventilator.glb"></a-asset-item>
                         <a-asset-item id="model2" src="glb/nochamlSSD.glb"></a-asset-item>
-                        <a-asset-item id="model3" src="glb/CPUdisassembled.glb"></a-asset-item>
-                        <a-asset-item id="model4" src="glb/CPU_mit_animation.glb"></a-asset-item>
+                        <a-asset-item id="model3" src="glb/CPU_mit_animation.glb"></a-asset-item>
+                        <a-asset-item id="model4" src="glb/CPUdisassembled.glb"></a-asset-item>
                         <a-asset-item id="model5" src="glb/futuristic_building(1).glb"></a-asset-item>
                         <a-asset-item id="model6" src="glb/2006__ford_gt_lm_spec_ll_test_car.glb"></a-asset-item>
                     </a-assets>
@@ -198,7 +198,7 @@
                     <!-- Marker für die 6 Seiten eines Würfels -->
                    
                     <!-- Marker 1 -->
-                    <a-marker type="pattern" url="pattern2/luefter.patt" id="marker1">
+                    <a-marker type="pattern" url="pattern2/pattern-luefter.patt" id="marker1">
                         <a-entity id="model-container-1"
                                   gltf-model="#model1"
                                   animation-mixer="clip: *; loop: repeat; timeScale: 1"
@@ -212,7 +212,7 @@
                     </a-marker>
  
                     <!-- Marker 2 -->
-                    <a-marker type="pattern" url="pattern2/pattern-GPU.patt" id="marker2">
+                    <a-marker type="pattern" url="pattern2/pattern-SSD.patt" id="marker2">
                         <a-entity id="model-container-2"
                                   gltf-model="#model2"
                                   scale="0.08 0.08 0.08"  
@@ -224,7 +224,7 @@
                     </a-marker>
  
                     <!-- Marker 3 -->
-                    <a-marker type="pattern" url="pattern2/pattern-a4.patt" id="marker3">
+                    <a-marker type="pattern" url="pattern2/pattern-CPU-final.patt" id="marker3">
                         <a-entity id="model-container-3"
                                   gltf-model="#model3"
                                   scale="0.1 0.1 0.1"  
@@ -236,7 +236,7 @@
                     </a-marker>
  
                     <!-- Marker 4 -->
-                    <a-marker type="pattern" url="pattern2/pattern-CPU-final.patt" id="marker4">
+                    <a-marker type="pattern" url="pattern2/pattern-Mouse.patt" id="marker4">
                         <a-entity id="model-container-4"
                                   gltf-model="#model4"
                                   scale="0.5 0.5 0.5"  
@@ -249,7 +249,7 @@
                     </a-marker>
  
                     <!-- Marker 5 -->
-                    <a-marker type="pattern" url="pattern2/pattern-a5.patt" id="marker5">
+                    <a-marker type="pattern" url="pattern2/pattern-Motherboard.patt" id="marker5">
                         <a-entity id="model-container-5"
                                   gltf-model="#model5"
                                   scale="0.1 0.1 0.1"  
@@ -466,6 +466,8 @@
             lastMouseY = event.touches[0].clientY;
         });
 
+
+/*
         // Here starts implementation from Claude AI
         let lastTouchEnd = 0;
         document.addEventListener('touchend', function(event) {
@@ -507,8 +509,8 @@
         window.addEventListener('load', lockViewport);
         window.addEventListener('orientationchange', lockViewport);
         window.addEventListener('resize', lockViewport);
-        // Here ends implementation from Claude AI  
- 
+        // Here ends implementation from Claude AI  */
+        
         window.onload = () => {
             initCameraSelection();
         };
