@@ -1,204 +1,111 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, viewport-fit=cover">
-    <meta name="HandheldFriendly" content="true">
-    <title>DRV-Cube</title>
-    <style>
-        * {
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Erweiterte Realität</title>
+  <style>
+    /* Overall page styling */
+    body {
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #9b6bff, #ff7e94);
+      font-family: Arial, sans-serif;
+    }
 
-        html {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            position: relative;
-        }
+    /* Container for the card and cube */
+    .container {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 50px;
+      padding: 20px;
+      border-radius: 20px;
+    }
 
-        body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            touch-action: manipulation;
-            -webkit-text-size-adjust: none;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            font-family: Arial, sans-serif;
-        }
+    /* Blurred gradient background behind the card */
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: auto;
+      width: 400px;
+      height: 400px;
+      background: linear-gradient(135deg, #ff9b9b, #b0a1ff);
+      filter: blur(50px);
+      z-index: -1;
+      border-radius: 20px;
+    }
 
-        .navbar-content {
-            width: 100%;
-            padding: 1rem;
-            background-color: #ffffff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            z-index: 100;
-            position: relative;
-        }
+    /* Card styling */
+    .card {
+      position: relative;
+      background-color: white;
+      padding: 30px;
+      border-radius: 20px;
+      width: 300px;
+      box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+    }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #333;
-        }
+    /* Title and description text */
+    .card h1 {
+      font-size: 24px;
+      color: #5f57ff;
+      margin: 0 0 15px;
+    }
+    .card p {
+      color: #333;
+      font-size: 16px;
+      line-height: 1.5;
+      margin: 0 0 20px;
+    }
 
-        .hero {
-            flex: 1;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 2rem;
-            background-color: #f5f5f5;
-        }
+    /* Button styling */
+    .button {
+      display: inline-block;
+      background-color: #5f57ff;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 50px;
+      font-size: 18px;
+      font-weight: bold;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .button:hover {
+      background-color: #4b45cc;
+    }
 
-        .hero-content {
-            max-width: 800px;
-        }
-
-        .hero-content h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-            color: #333;
-        }
-
-        .hero-content p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            color: #666;
-            line-height: 1.6;
-        }
-
-        #loading-indicator {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 4px;
-            display: none;
-            z-index: 1000;
-        }
-
-        #ar-container {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            background-color: #000;
-            display: none;
-        }
-
-        .start-button {
-            display: inline-block;
-            padding: 1rem 2rem;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-            font-weight: bold;
-            transition: background-color 0.3s;
-        }
-
-        .start-button:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    /* Cube styling */
+    .cube {
+      width: 100px;
+      height: 100px;
+      background-color: #333;
+      transform: rotateY(45deg) rotateX(20deg);
+      box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.3);
+    }
+  </style>
 </head>
 <body>
-    <nav class="navbar-content">
-        <div class="logo">
-            DRV-Cube
-        </div>
-    </nav>
-
-    <main id="hero" class="hero" role="main">
-        <div class="hero-content">
-            <h1>Erlebe Erweiterte Realität</h1>
-            <p>
-                Verwandle deine Welt mit DRV-Cube. Interagiere mit 3D-Objekten, lerne
-                und entdecke auf eine völlig neue Art und Weise.
-            </p>
-            <a href="#" class="start-button">Starten</a>
-        </div>
-    </main>
-
-    <div id="loading-indicator">
-        AR-Erfahrung wird geladen...
+  <div class="container">
+    <!-- Left card with text and button -->
+    <div class="card">
+      <h1>Erlebe Erweiterte Realität</h1>
+      <p>Verwandle deine Welt mit DRV-Cube. Interagiere mit 3D-Objekten, lerne und entdecke auf eine völlig neue Art und Weise.</p>
+      <a href="#" class="button">Starten</a>
     </div>
 
-    <div id="ar-container">
-    </div>
-
-    <script>
-        // Prevent double-tap zoom
-        let lastTouchEnd = 0;
-        document.addEventListener('touchend', function(event) {
-            const now = Date.now();
-            if (now - lastTouchEnd <= 300) {
-                event.preventDefault();
-            }
-            lastTouchEnd = now;
-        }, false);
-
-        // Prevent pinch zoom
-        document.addEventListener('touchmove', function(event) {
-            if (event.touches.length > 1) {
-                event.preventDefault();
-            }
-        }, { passive: false });
-
-        // Prevent gesture zooming
-        document.addEventListener('gesturestart', function(event) {
-            event.preventDefault();
-        });
-        
-        document.addEventListener('gesturechange', function(event) {
-            event.preventDefault();
-        });
-        
-        document.addEventListener('gestureend', function(event) {
-            event.preventDefault();
-        });
-
-        // Lock viewport
-        function lockViewport() {
-            const viewport = document.querySelector('meta[name="viewport"]');
-            if (viewport) {
-                viewport.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, viewport-fit=cover';
-            }
-        }
-
-        // Event Listeners
-        window.addEventListener('load', lockViewport);
-        window.addEventListener('orientationchange', lockViewport);
-        window.addEventListener('resize', lockViewport);
-
-        // Handle Start Button
-        document.querySelector('.start-button').addEventListener('click', function(e) {
-            e.preventDefault();
-            document.getElementById('loading-indicator').style.display = 'block';
-            document.getElementById('hero').style.display = 'none';
-            
-            // Simulate loading (replace with your actual AR initialization)
-            setTimeout(function() {
-                document.getElementById('loading-indicator').style.display = 'none';
-                document.getElementById('ar-container').style.display = 'block';
-            }, 2000);
-        });
-    </script>
+    <!-- Cube graphic on the right -->
+    <div class="cube"></div>
+  </div>
 </body>
 </html>
