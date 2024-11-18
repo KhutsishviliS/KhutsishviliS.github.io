@@ -32,9 +32,9 @@
                     <div class="face front"><img src="bgimages\Bild (3).png" alt="" width="200px" height="200px"></div>
                     <div class="face back"><img src="bgimages\Bild (4).png" alt="" width="200px" height="200px"></div>
                     <div class="face right"><img src="bgimages\Bild (5).png" alt="" width="200px" height="200px"></div>
-                    <div class="face left"><img src="img2\drv_prev_ui (2).png" alt="" width="200px" height="200px"></div>
-                    <div class="face top"><img src="img2\drv_prev_ui (2).png" alt="" width="200px" height="200px"></div>
-                    <div class="face bottom"><img src="img2\drv_prev_ui (2).png" alt="" width="200px" height="200px"></div>
+                    <div class="face left"><img src="bgimages\Bild (5).png" alt="" width="200px" height="200px"></div>
+                    <div class="face top"><img src="bgimages\Bild (5).png" alt="" width="200px" height="200px"></div>
+                    <div class="face bottom"><img src="bgimages\Bild (5).png" alt="" width="200px" height="200px"></div>
                 </div>
             </div>  
  
@@ -145,17 +145,17 @@
                     <!-- Assets vorab laden -->
                     <a-assets>
                         <a-asset-item id="model1" src="glb/2.0 Lüfter_Ventilator.glb"></a-asset-item>
-                        <a-asset-item id="model2" src="glb/CPU mit animation kleiner.glb"></a-asset-item>
-                        <a-asset-item id="model3" src="glb/CPU mit animation.glb"></a-asset-item>
-                        <a-asset-item id="model4" src="glb/CPU mit animation.glb"></a-asset-item>
-                        <a-asset-item id="model5" src="glb/CPU mit animation.glb"></a-asset-item>
-                        <a-asset-item id="model6" src="glb/CPU mit animation.glb"></a-asset-item>
+                        <a-asset-item id="model2" src="glb/CPU_mit_animation.glb"></a-asset-item>
+                        <a-asset-item id="model3" src="glb/CPU_mit_animation.glb"></a-asset-item>
+                        <a-asset-item id="model4" src="glb/CPU_mit_animation.glb"></a-asset-item>
+                        <a-asset-item id="model5" src="glb/CPU_mit_animation.glb"></a-asset-item>
+                        <a-asset-item id="model6" src="glb/CPU_mit_animation.glb"></a-asset-item>
                     </a-assets>
  
                     <!-- Marker für die 6 Seiten eines Würfels -->
                    
                     <!-- Marker 1 -->
-                    <a-marker type="pattern" url="pattern2/pattern-CPU-final.patt" id="marker1">
+                    <a-marker type="pattern" url="pattern2/pattern-luefter.patt" id="marker1">
                         <a-entity id="model-container-1"
                                   gltf-model="#model1"
                                   animation-mixer="clip: *; loop: repeat; timeScale: 1"
@@ -168,7 +168,7 @@
                     </a-marker>
  
                     <!-- Marker 2 -->
-                    <a-marker type="pattern" url="pattern2/pattern-GPU 1.patt" id="marker2">
+                    <a-marker type="pattern" url="pattern2/pattern-CPU-final.patt" id="marker2">
                         <a-entity id="model-container-2"
                                   gltf-model="#model2"
                                   animation-mixer="clip: *; loop: repeat; timeScale: 1"
@@ -181,7 +181,7 @@
                     </a-marker>
  
                     <!-- Marker 3 -->
-                    <a-marker type="pattern" url="pattern2/pattern-luefter.patt" id="marker3">
+                    <a-marker type="pattern" url="pattern2/pattern-GPU.patt" id="marker3">
                         <a-entity id="model-container-3"
                                   gltf-model="#model3"
                                   animation-mixer="clip: *; loop: repeat; timeScale: 1"
@@ -194,7 +194,7 @@
                     </a-marker>
  
                     <!-- Marker 4 -->
-                    <a-marker type="pattern" url="pattern2/pattern-motherboard 2.patt" id="marker4">
+                    <a-marker type="pattern" url="pattern2/pattern-Motherboard.patt" id="marker4">
                         <a-entity id="model-container-4"
                                   gltf-model="#model4"
                                   animation-mixer="clip: *; loop: repeat; timeScale: 1"
@@ -220,7 +220,7 @@
                     </a-marker>
  
                     <!-- Marker 6 -->
-                    <a-marker type="pattern" url="pattern2/pattern-SSD 2.patt" id="marker6">
+                    <a-marker type="pattern" url="pattern2/pattern-SSD.patt" id="marker6">
                         <a-entity id="model-container-6"
                                   gltf-model="#model6"
                                   scale="0.05 0.05 0.05"

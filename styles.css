@@ -190,7 +190,7 @@ h1 {
     perspective: 1200px;
     margin: 2rem;
     transform-style: preserve-3d;
-    animation: container-rotate 20s infinite linear;
+    transform: rotateX(15deg);
 }
 
 .cube {
@@ -199,6 +199,16 @@ h1 {
     position: relative;
     transform-style: preserve-3d;
     transition: transform 0.3s ease;
+    animation: cube-rotate 20s infinite linear;
+}
+
+@keyframes cube-rotate {
+    0% {
+        transform: rotateY(0deg);
+    }
+    100% {
+        transform: rotateY(360deg);
+    }
 }
 
 .face {
@@ -250,15 +260,6 @@ h1 {
 .left   { transform: rotateY(-90deg) translateZ(100px); }
 .top    { transform: rotateX(90deg) translateZ(100px); }
 .bottom { transform: rotateX(-90deg) translateZ(100px); }
-
-@keyframes container-rotate {
-    0% {
-        transform: rotateX(15deg) rotateY(0deg) rotateZ(0deg);
-    }
-    100% {
-        transform: rotateX(15deg) rotateY(360deg) rotateZ(0deg);
-    }
-}
 
 /* Hover effects */
 .cube-container:hover {
